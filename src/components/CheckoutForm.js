@@ -8,7 +8,7 @@ class CheckoutForm extends React.Component {
     name: {value: '', valid: true},
     lastName: {value: '', valid: true},
     address: {value: '', valid: true},
-    payment: '',
+    paymentMethod: {value: '', valid: true},
     addressIsValid: false
   }
 
@@ -25,9 +25,11 @@ class CheckoutForm extends React.Component {
   }
 
   handleAddressSubmission = (event) => {
-    console.log(requestHeaders)
     event.preventDefault()
     this.simpleValidation()
+    this.setState({
+      paymentMethod: {value: 'Credit Card', valid: true}
+    })
   }
 
   handleOrderSubmission = (event) => {
@@ -45,7 +47,7 @@ class CheckoutForm extends React.Component {
      })
       .then((response) => {
         if(!response.ok) throw new Error(response.status)
-        response.json().then((data) => alert('Your order has been successfully processed, here\s your token: ' + data.token))
+        response.json().then((data) => alert('Your order paid with ' + this.state.paymentMethod.value + ' has been successfully processed, here\'s your token: ' + data.token))
      })
       .catch((error) => {
         alert('There has been a problem processing your order, please contact support')
@@ -120,15 +122,15 @@ class CheckoutForm extends React.Component {
             <form onSubmit={this.handleOrderSubmission}>
               <div className="d-block my-3">
                 <div className="custom-control custom-radio">
-                  <input id="credit" name="paymentMethod" type="radio" className="custom-control-input" required="required" checked="checked" />
+                  <input id="credit" name="paymentMethod" type="radio" className="custom-control-input" value="Credit Card" required="required" onChange={this.handleInputChange} />
                   <label className="custom-control-label" htmlFor="credit">Credit card</label>
                 </div>
                 <div className="custom-control custom-radio">
-                  <input id="debit" name="paymentMethod" type="radio" className="custom-control-input" required="required" />
+                  <input id="debit" name="paymentMethod" type="radio" className="custom-control-input" value="Debit Card" required="required" onChange={this.handleInputChange} />
                   <label className="custom-control-label" htmlFor="debit">Debit card</label>
                 </div>
                 <div className="custom-control custom-radio">
-                  <input id="paypal" name="paymentMethod" type="radio" className="custom-control-input" required="required" />
+                  <input id="paypal" name="paymentMethod" type="radio" className="custom-control-input" value="PayPal" required="required" onChange={this.handleInputChange} />
                   <label className="custom-control-label" htmlFor="paypal">Paypal</label>
                 </div>
               </div>
